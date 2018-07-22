@@ -7,15 +7,23 @@ class Drowdown extends Component {
         this.eachRadioLi = this.eachRadioLi.bind(this);
         this.eachGroup = this.eachGroup.bind(this);
         this.state = {
+            items: props.items,
+            groupItems: props.groupItems,
             selectedItems: [],
             selectedString: '',
             isOpen: false
         }
-        this.onSelectListItem = this.onSelectListItem.bind(this);
-        this.toggleList = this.toggleList.bind(this);
+        this.afterSelect = this.afterSelect.bind(this);
+        this.onSingleSelectListItem = this.onSingleSelectListItem.bind(this);
+        this.onMultiSelectListItem = this.onMultiSelectListItem.bind(this);
+        this.toggleDropdown = this.toggleDropdown.bind(this);
         this.showSelectedItemString = this.showSelectedItemString.bind(this);
         this.onSelectAll = this.onSelectAll.bind(this);
         this.renderMuliSelect = this.renderMuliSelect.bind(this);
+        this.renderSingleSelect = this.renderSingleSelect.bind(this);
+        this.handleClickOutside = this.handleClickOutside.bind(this);
+        // create Ref
+        this.dropdownNode = React.createRef();
     }
     componentWillMount() {
         this.selectAllListItem = {
@@ -25,12 +33,29 @@ class Drowdown extends Component {
             selected: false
         }
         this.ddCount = 0;
+        document.addEventListener('mousedown', this.handleClickOutside);
     }
+
+    handleClickOutside(event) {
+        event.stopPropagation();
+        console.log(this.dropdownNode);
+        const dropdowncontainer = this.dropdownNode.current;
+        if (!dropdowncontainer) {
+            return;
+        }
+        const { target } = event;
+        if (target !== dropdowncontainer && !dropdowncontainer.contains(target)) {
+            this.setState({
+                isOpen: false
+            });
+        }
+    }
+
     eachCheckBoxLi(item, index) {
         return (
             <li key={index} id={'item-' + item.id} className="list-item" >
                 <label className="checkmark" htmlFor={'t' + index}>
-                    <input onChange={this.onSelectListItem.bind(this, item)} type="checkbox" id={'t' + index} checked={item.selected} />
+                    <input onChange={this.onMultiSelectListItem.bind(this, item)} type="checkbox" id={'t' + index} checked={item.selected} />
                     {item.name}
                 </label>
             </li>
@@ -41,7 +66,7 @@ class Drowdown extends Component {
         return (
             <li key={index} id={'item-' + item.id} className={item.selected ? 'list-item active' : 'list-item'} >
                 <label className="radiomark" htmlFor={'t' + index}>
-                    <input onChange={this.props.selectCheckbox.bind(this, item.id)} name={'t1'} type="radio" id={'t' + index} checked={item.selected} style={{ visibility: 'hidden' }} />
+                    <input onChange={this.onSingleSelectListItem.bind(this, item)} name={'t1'} type="radio" id={'t' + index} checked={item.selected} style={{ visibility: 'hidden' }} />
                     {item.name}
                 </label>
             </li>
@@ -51,44 +76,99 @@ class Drowdown extends Component {
     eachGroup(group, index) {
         return (
             <li className="groupLi" key={index}>
-                <div className="groupDiv"> {group.groupName} </div>
+                <div className="groupDiv"> {group.name} </div>
                 <ul>
-                    {group.children.map(this.eachCheckBoxLi)}
+                    {group.children.map(this.eachRadioLi)}
                 </ul>
             </li>
         )
     }
 
-    toggleList() {
+    toggleDropdown(e) {
+        if (e) {
+            e.stopPropagation();
+        }
         this.setState((prevState) => ({
             isOpen: !prevState.isOpen
         }))
     }
 
-    onSelectListItem(item, e) {
-        this.props.toggler(item.id);
-        if (e.target.checked) {
-            this.addToSelectedData(item);
+    onMultiSelectListItem(item, e) {
+        this.setState(prev => ({
+            items: prev.items.map(prevItem => prevItem.id === item.id ? { ...prevItem, selected: !prevItem.selected } : prevItem)
+        }), () => {
+            const mySelectedItems = this.state.items.filter(i => i.selected);
+            this.setState({
+                selectedItems: mySelectedItems
+            }, this.afterSelect)
+        })
+    }
+
+    onSingleSelectListItem(item, e) {
+        if (!this.props.allowGrouping) {
+            this.setState(prevState => ({
+                items: prevState.items.map(i => {
+                    if (i.id === item.id) {
+                        i.selected = true;
+                    } else {
+                        i.selected = false;
+                    }
+                    return i;
+                })
+            }), () => {
+                const mySelectedItem = this.state.items.filter(i => i.selected);
+                this.setState({
+                    selectedItems: mySelectedItem
+                }, this.afterSelect)
+            })
         } else {
-            this.removeSelectedData(item);
+            let changed = false;
+            const mySelectedItem = [];
+            this.setState(prevState => (
+                {
+                    groupItems: prevState.groupItems.map(group => {
+                        if (!changed) {
+                            group.children = group.children.map(eachItem => {
+                                if (eachItem.id === item.id) {
+                                    eachItem.selected = true;
+                                    changed = true;
+                                    mySelectedItem.push(eachItem);
+                                } else {
+                                    eachItem.selected = false;
+                                }
+                                return eachItem;
+                            });
+                        }
+                        return group;
+                    })
+                }), () => {
+                    this.setState({
+                        selectedItems: mySelectedItem
+                    }, this.afterSelect)
+                })
         }
+        this.toggleDropdown();
     }
 
-    addToSelectedData(item) {
-        this.setState((prevState) => {
-            console.log(this.state, prevState);
-            return {
-                selectedItems: [...prevState.selectedItems, item]
-            }
-        });
+    afterSelect() {
+        this.props.onSelect(this.state.selectedItems);
     }
 
-    removeSelectedData(item) {
+    onSelectAll(e) {
+        const isChecked = e.target.checked;
         this.setState((prevState) => {
             return {
-                selectedItems: prevState.selectedItems.filter(sItem => sItem.id !== item.id)
+                items: prevState.items.map(item => {
+                    item.selected = isChecked;
+                    return item;
+                })
             }
-        });
+        }, () => {
+            const mySelectedItems = this.state.items.filter(i => i.selected);
+            this.setState({
+                selectedItems: mySelectedItems
+            }, this.afterSelect)
+        })
     }
 
     showSelectedItemString() {
@@ -107,54 +187,51 @@ class Drowdown extends Component {
                 });
             }
         }
-        return str;
+        return str || this.props.placeholder;
     }
 
-    onSelectAll(e) {
-        this.props.selectAll(e.target.checked);
-    }
+
 
     renderMuliSelect() {
+        return (
+            <ul className="mainUl">
+                {this.props.allowSelectAll &&
+                    <li className="select-all" >
+                        <label className="checkmark" htmlFor={'x-select-all'}>
+                            <input onChange={this.onSelectAll} type="checkbox" id={'x-select-all'} />
+                            Select All
+                        </label>
+                    </li>}
+                {this.state.items.map(this.eachCheckBoxLi)}
+            </ul>
+        )
+    }
+
+    renderSingleSelect() {
         if (this.props.allowGrouping) {
             return (<ul className="mainUl">
-                {this.props.groupItems.map(this.eachGroup)}
+                {this.state.groupItems.map(this.eachGroup)}
             </ul>)
         } else {
-            return (
-                <ul className="mainUl">
-                    {this.props.allowSelectAll &&
-                        <li className="select-all" >
-                            <label className="checkmark" htmlFor={'x-select-all'}>
-                                <input onChange={this.onSelectAll} type="checkbox" id={'x-select-all'} />
-                                Select All
-                        </label>
-                        </li>}
-                    {this.props.items.map(this.eachCheckBoxLi)}
-                </ul>
-            )
+            return (<ul className="mainUl">
+                {this.state.items.map(this.eachRadioLi)}
+            </ul>)
         }
     }
 
     renderDisplay() {
-        if (this.props.allowMultiselect) {
-            return this.renderMuliSelect()
+        if (!this.props.allowMultiselect) {
+            return this.renderSingleSelect();
         } else {
-            return (<ul className="mainUl">
-                {this.props.items.map(this.eachRadioLi)}
-            </ul>)
+            return this.renderMuliSelect();
         }
     }
 
     render() {
         return (
-            <div className="dropdowncomponent">
-                <div className="heading" onClick={this.toggleList}>{this.props.heading}</div>
+            <div className="dropdowncomponent" ref={this.dropdownNode}>
+                <div className="heading ellipse" onClick={this.toggleDropdown}>{this.showSelectedItemString()}</div>
                 {this.state.isOpen && this.renderDisplay()}
-                <h2>Selected</h2>
-                {this.showSelectedItemString()}
-
-                {JSON.stringify(this.props.mySelectedItems)}
-                {[this.props.mySelectedItems].map(this.eachCheckBoxLi)}
             </div>
         )
     }

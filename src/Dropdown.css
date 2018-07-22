@@ -46,6 +46,7 @@
     position: absolute;
     box-sizing: border-box;
     width: 200px;
+    z-index: 10;
   }
   
   .dropdowncomponent ul li.list-item {
@@ -57,6 +58,12 @@
   }
   .active {
     background-color: #f7f7f7;
+  }
+  .ellipse {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 21px;
   }
   .dropdowncomponent ul li label {
     display: block;

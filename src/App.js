@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Drowdown from "./Dropdown";
 import "./Dropdown.css";
+import "./App.css";
 
 class App extends Component {
     constructor(props) {
@@ -37,7 +38,8 @@ class App extends Component {
             groupsData: [
                 {
                     id: 1,
-                    groupName: 'INITIAL INTEREST',
+                    name: 'INITIAL INTEREST',
+                    value: '',
                     children: [
                         {
                             id: 1,
@@ -58,11 +60,10 @@ class App extends Component {
                             selected: false
                         }
                     ],
-                    value: ''
                 },
                 {
                     id: 2,
-                    groupName: 'HIGH INTEREST',
+                    name: 'HIGH INTEREST',
                     children: [
                         {
                             id: 1,
@@ -87,7 +88,7 @@ class App extends Component {
                 },
                 {
                     id: 3,
-                    groupName: 'TERMSHEET',
+                    name: 'TERMSHEET',
                     children: [
                         {
                             id: 1,
@@ -100,17 +101,23 @@ class App extends Component {
                 }
             ]
         };
-        this.toggleSelected = this.toggleSelected.bind(this);
-        this.selectAll = this.selectAll.bind(this);
+        // this.toggleSelected = this.toggleSelected.bind(this);
         this.selectCheckbox = this.selectCheckbox.bind(this);
+        this.onDropdownSelection = this.onDropdownSelection.bind(this);
     }
 
-    toggleSelected(itemId) {
-        this.setState((prevState) => {
-            const items = prevState.data;
-            return {
-                data: items.map(item => item.id !== itemId ? item : { ...item, selected: !item.selected })
-            }
+    // toggleSelected(itemId) {
+    //     this.setState((prevState) => {
+    //         const items = prevState.data;
+    //         return {
+    //             data: items.map(item => item.id !== itemId ? item : { ...item, selected: !item.selected })
+    //         }
+    //     })
+    // }
+
+    onDropdownSelection(items) {
+        this.setState({
+            mySelectedItems: items
         })
     }
 
@@ -135,22 +142,20 @@ class App extends Component {
         })
     }
 
-    selectAll(newValue) {
-        this.setState((prevState) => {
-            return {
-                data: prevState.data.map(item => {
-                    item.selected = newValue;
-                    return item;
-                })
-            }
-        })
-    }
 
     render() {
         return (
             <div className="App">
-                <Drowdown heading={'Company'} items={this.state.data} allowMultiselect={false} allowSelectAll={true} toggler={this.toggleSelected} selectAll={this.selectAll} selectCheckbox={this.selectCheckbox} mySelectedItems={this.state.mySelectedItems} />
-                <Drowdown heading={'Company'} groupItems={this.state.groupsData} allowMultiselect={true} allowGrouping={true} allowSelectAll={true} selectAll={this.selectAll} toggler={this.toggleSelected} selectCheckbox={this.selectCheckbox} mySelectedItems={this.state.mySelectedItems} />
+                <h1>
+                    Parent Component
+                </h1>
+                <h2>
+                    Selection => : {JSON.stringify(this.state.mySelectedItems)}
+                </h2>
+                <Drowdown placeholder={'Company'} items={this.state.data} allowMultiselect={false} allowSelectAll={true} onSelect={this.onDropdownSelection} />
+                <Drowdown placeholder={'Company'} items={this.state.data} allowMultiselect={true} allowSelectAll={true} onSelect={this.onDropdownSelection} />
+                <Drowdown placeholder={'Company'} groupItems={this.state.groupsData} allowGrouping={true} allowMultiselect={false} allowSelectAll={true} onSelect={this.onDropdownSelection} />
+
             </div>
         )
     }

@@ -160,19 +160,22 @@ class App extends Component {
                 </h1>
                     <div>
                         <div>
-                            <code>Selection 1 => : {JSON.stringify(this.state.mySelectedItems1)}
+                            <code>Selection #1 => : {JSON.stringify(this.state.mySelectedItems1)}
                             </code>
                         </div>
                         <div>
-                            <code> Selection 2 => : {JSON.stringify(this.state.mySelectedItems2)}</code>
+                            <code> Selection #2 => : {JSON.stringify(this.state.mySelectedItems2)}</code>
                         </div>
                         <div>
-                            <code>Selection 3 => : {JSON.stringify(this.state.mySelectedItems3)}</code>
+                            <code>Selection #3 => : {JSON.stringify(this.state.mySelectedItems3)}</code>
                         </div>
                     </div>
                 </div>
+                <div> #1 SINGLE SELECT </div>
                 <Drowdown placeholder={'Company'} items={this.state.data2} allowMultiselect={false} onSelect={this.onDropdownSelection1} />
+                <div> #2 MULTI SELECT </div>
                 <Drowdown placeholder={'Company'} items={this.state.data} allowMultiselect={true} allowSelectAll={true} onSelect={this.onDropdownSelection2} />
+                <div> #3 GROUP SELECT </div>
                 <Drowdown placeholder={'Company'} groupItems={this.state.groupsData} allowGrouping={true} allowMultiselect={false} allowSelectAll={true} onSelect={this.onDropdownSelection3} />
 
             </div >

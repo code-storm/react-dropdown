@@ -65,7 +65,7 @@ class App extends Component {
             mySelectedItems3: [],
             groupsData: [
                 {
-                    id: 1,
+                    id: 'g1',
                     name: 'INITIAL INTEREST',
                     value: '',
                     children: [
@@ -90,23 +90,23 @@ class App extends Component {
                     ],
                 },
                 {
-                    id: 2,
+                    id: 'g2',
                     name: 'HIGH INTEREST',
                     children: [
                         {
-                            id: 1,
+                            id: 4,
                             name: "P1",
                             value: "p1",
                             selected: false
                         },
                         {
-                            id: 2,
+                            id: 5,
                             name: "P2",
                             value: "p2",
                             selected: false
                         },
                         {
-                            id: 3,
+                            id: 6,
                             name: "P3 - P5",
                             value: "p3 - p5",
                             selected: false
@@ -115,11 +115,11 @@ class App extends Component {
                     value: ''
                 },
                 {
-                    id: 3,
+                    id: 'g3',
                     name: 'TERMSHEET',
                     children: [
                         {
-                            id: 1,
+                            id: 7,
                             name: "In Progress",
                             value: "in progress",
                             selected: false

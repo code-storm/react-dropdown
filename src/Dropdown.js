@@ -64,8 +64,8 @@ class Drowdown extends Component {
     eachCheckBoxLi(item, index) {
         return (
             <li key={index} id={'item-' + item.id} className="list-item" >
-                <input className="styled-checkbox" onChange={this.onMultiSelectListItem.bind(this, item)} type="checkbox" id={'t' + index} checked={item.selected} />
-                <label className="checkmark" htmlFor={'t' + index}>
+                <input className="styled-checkbox" onChange={this.onMultiSelectListItem.bind(this, item)} type="checkbox" id={'t-' + item.id} checked={item.selected} />
+                <label className="checkmark" htmlFor={'t-' + item.id}>
                     {item.name}
                 </label>
             </li>
@@ -75,8 +75,8 @@ class Drowdown extends Component {
     eachRadioLi(item, index) {
         return (
             <li key={index} id={'item-' + item.id} className={item.selected ? 'list-item active' : 'list-item'} >
-                <label className="radiomark" htmlFor={'t' + index}>
-                    <input onChange={this.onSingleSelectListItem.bind(this, item)} name={'t1'} type="radio" id={'t' + index} checked={item.selected} style={{ visibility: 'hidden' }} />
+                <label className="radiomark" htmlFor={'t-' + item.id}>
+                    <input onChange={this.onSingleSelectListItem.bind(this, item)} name={'t1'} type="radio" id={'t-' + item.id} checked={item.selected} style={{ visibility: 'hidden' }} />
                     {item.name}
                 </label>
             </li>

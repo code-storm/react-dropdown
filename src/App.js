@@ -33,8 +33,36 @@ class App extends Component {
                     selected: false
                 },
             ],
+            data2: [
+                {
+                    id: 1,
+                    name: "Option 1",
+                    value: "Option 1",
+                    selected: false
+                },
+                {
+                    id: 2,
+                    name: "Option 2",
+                    value: "Option 2",
+                    selected: false
+                },
+                {
+                    id: 3,
+                    name: "Option 3",
+                    value: "Option 3",
+                    selected: false
+                },
+                {
+                    id: 4,
+                    name: "Option 4",
+                    value: "Option 4",
+                    selected: false
+                },
+            ],
             allowSelection: true,
-            mySelectedItems: [],
+            mySelectedItems1: [],
+            mySelectedItems2: [],
+            mySelectedItems3: [],
             groupsData: [
                 {
                     id: 1,
@@ -101,62 +129,53 @@ class App extends Component {
                 }
             ]
         };
-        // this.toggleSelected = this.toggleSelected.bind(this);
-        this.selectCheckbox = this.selectCheckbox.bind(this);
-        this.onDropdownSelection = this.onDropdownSelection.bind(this);
+        this.onDropdownSelection1 = this.onDropdownSelection1.bind(this);
+        this.onDropdownSelection2 = this.onDropdownSelection2.bind(this);
+        this.onDropdownSelection3 = this.onDropdownSelection3.bind(this);
     }
 
-    // toggleSelected(itemId) {
-    //     this.setState((prevState) => {
-    //         const items = prevState.data;
-    //         return {
-    //             data: items.map(item => item.id !== itemId ? item : { ...item, selected: !item.selected })
-    //         }
-    //     })
-    // }
-
-    onDropdownSelection(items) {
+    onDropdownSelection1(items) {
         this.setState({
-            mySelectedItems: items
+            mySelectedItems1: items
         })
     }
 
-    selectCheckbox(itemId) {
-        const myItems = [];
-        this.setState((prevState) => {
-            return {
-                data: prevState.data.map(item => {
-                    if (item.id === itemId) {
-                        item.selected = true;
-                        myItems.push(item);
-                    } else {
-                        item.selected = false;
-                    }
-                    return item;
-                })
-            }
-        }, () => {
-            this.setState({
-                mySelectedItems: myItems
-            });
+    onDropdownSelection2(items) {
+        this.setState({
+            mySelectedItems2: items
         })
     }
-
+    onDropdownSelection3(items) {
+        this.setState({
+            mySelectedItems3: items
+        })
+    }
 
     render() {
         return (
             <div className="App">
-                <h1>
-                    Parent Component
+                <div style={{ border: 'solid 1px', margin: '10px', wordWrap: 'break-word' }}>
+                    <h1>
+                        Parent Component
                 </h1>
-                <h2>
-                    Selection => : {JSON.stringify(this.state.mySelectedItems)}
-                </h2>
-                <Drowdown placeholder={'Company'} items={this.state.data} allowMultiselect={false} allowSelectAll={true} onSelect={this.onDropdownSelection} />
-                <Drowdown placeholder={'Company'} items={this.state.data} allowMultiselect={true} allowSelectAll={true} onSelect={this.onDropdownSelection} />
-                <Drowdown placeholder={'Company'} groupItems={this.state.groupsData} allowGrouping={true} allowMultiselect={false} allowSelectAll={true} onSelect={this.onDropdownSelection} />
+                    <div>
+                        <div>
+                            <code>Selection 1 => : {JSON.stringify(this.state.mySelectedItems1)}
+                            </code>
+                        </div>
+                        <div>
+                            <code> Selection 2 => : {JSON.stringify(this.state.mySelectedItems2)}</code>
+                        </div>
+                        <div>
+                            <code>Selection 3 => : {JSON.stringify(this.state.mySelectedItems3)}</code>
+                        </div>
+                    </div>
+                </div>
+                <Drowdown placeholder={'Company'} items={this.state.data2} allowMultiselect={false} onSelect={this.onDropdownSelection1} />
+                <Drowdown placeholder={'Company'} items={this.state.data} allowMultiselect={true} allowSelectAll={true} onSelect={this.onDropdownSelection2} />
+                <Drowdown placeholder={'Company'} groupItems={this.state.groupsData} allowGrouping={true} allowMultiselect={false} allowSelectAll={true} onSelect={this.onDropdownSelection3} />
 
-            </div>
+            </div >
         )
     }
 }

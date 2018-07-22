@@ -43,7 +43,7 @@ Property | Type | Description
 **allowMultiselect** | *boolean* | To allow multiselect feature in dropdown.
 **allowSelectAll** | *boolean* | Provide Select All option with `Multi-select` dropdown.
 **placeholder** | *string* | Placeholder heading for dropdown.
-**onSelect** | *function* | Callback for `Dropdown selection event`.
+**onSelect** | *function* | Callback for `Dropdown selection event` with list of selected items as response.
 
 
 ### Properties Schema
@@ -119,5 +119,6 @@ var groupItems = [
   }
 ];
             
+
 
 ```

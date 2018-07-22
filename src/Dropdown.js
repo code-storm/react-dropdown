@@ -11,7 +11,13 @@ class Drowdown extends Component {
             groupItems: props.groupItems,
             selectedItems: [],
             selectedString: '',
-            isOpen: false
+            isOpen: false,
+            selectAllListItem: {
+                name: 'Select All',
+                id: -1,
+                value: 'select all',
+                selected: false
+            }
         }
         this.afterSelect = this.afterSelect.bind(this);
         this.onSingleSelectListItem = this.onSingleSelectListItem.bind(this);
@@ -36,6 +42,10 @@ class Drowdown extends Component {
         document.addEventListener('mousedown', this.handleClickOutside);
     }
 
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
     handleClickOutside(event) {
         event.stopPropagation();
         console.log(this.dropdownNode);
@@ -54,8 +64,8 @@ class Drowdown extends Component {
     eachCheckBoxLi(item, index) {
         return (
             <li key={index} id={'item-' + item.id} className="list-item" >
+                <input className="styled-checkbox" onChange={this.onMultiSelectListItem.bind(this, item)} type="checkbox" id={'t' + index} checked={item.selected} />
                 <label className="checkmark" htmlFor={'t' + index}>
-                    <input onChange={this.onMultiSelectListItem.bind(this, item)} type="checkbox" id={'t' + index} checked={item.selected} />
                     {item.name}
                 </label>
             </li>
@@ -102,6 +112,9 @@ class Drowdown extends Component {
                 selectedItems: mySelectedItems
             }, this.afterSelect)
         })
+        this.setState(prevState => ({
+            selectAllListItem: { ...prevState.selectAllListItem, selected: false }
+        }))
     }
 
     onSingleSelectListItem(item, e) {
@@ -151,7 +164,7 @@ class Drowdown extends Component {
     }
 
     afterSelect() {
-        this.props.onSelect(this.state.selectedItems);
+        this.props.onSelect([...this.state.selectedItems]);
     }
 
     onSelectAll(e) {
@@ -169,6 +182,9 @@ class Drowdown extends Component {
                 selectedItems: mySelectedItems
             }, this.afterSelect)
         })
+        this.setState(prevState => ({
+            selectAllListItem: { ...prevState.selectAllListItem, selected: !prevState.selectAllListItem.selected }
+        }))
     }
 
     showSelectedItemString() {
@@ -196,10 +212,10 @@ class Drowdown extends Component {
         return (
             <ul className="mainUl">
                 {this.props.allowSelectAll &&
-                    <li className="select-all" >
+                    <li className="select-all list-item" >
+                        <input onChange={this.onSelectAll} type="checkbox" className="styled-checkbox" id={'x-select-all'} checked={this.state.selectAllListItem.selected} />
                         <label className="checkmark" htmlFor={'x-select-all'}>
-                            <input onChange={this.onSelectAll} type="checkbox" id={'x-select-all'} />
-                            Select All
+                            {this.selectAllListItem.name}
                         </label>
                     </li>}
                 {this.state.items.map(this.eachCheckBoxLi)}

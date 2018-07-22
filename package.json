@@ -2,7 +2,7 @@
   "name": "react-dropdown",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://code-storm.github.io/react-dropdown",
+  "homepage": "https://code-storm.github.io/react-dropdown/",
   "dependencies": {
     "gh-pages": "^1.2.0",
     "react": "^16.4.1",

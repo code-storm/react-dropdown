@@ -2,7 +2,7 @@
 
 Non-prescriptive React.js dropdown toolkit.
 
-[See it in action (Demo)](https://code-storm.github.io/react-dropdown/)
+[See it in action (Demo)](https://code-storm.github.io/react-dropdown/index.html)
 
 ### Installation
 

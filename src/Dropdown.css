@@ -1,0 +1,88 @@
+.dropdowncomponent {
+    width: 200px;
+    display: inline-block;
+    color: #909090;
+    position: relative;
+  }
+  .heading {
+    text-align: left;
+    position: relative;
+    border: solid 2px #e2e2e2;
+    padding: 5px;
+    border-radius: 3px;
+  }
+  .heading::after {
+    background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/551749-200.png);
+    background-size: cover;
+    content: "";
+    width: 15px;
+    display: inline-block;
+    height: 15px;
+    position: absolute;
+    right: 5px;
+    bottom: 6px;
+  }
+
+  .dropdowncomponent ul {
+    list-style: none;
+    padding: 0px;
+  }
+  li div.groupDiv {
+    padding: 10px;
+    background-color: #ededed;
+  }
+
+  .dropdowncomponent li.groupLi li.list-item label {
+    padding-left: 20px;
+  }
+
+  .dropdowncomponent ul.mainUl {
+    padding: 5px 0px;
+    margin: 5px 0px;
+    background-color: #fff;
+    list-style: none;
+    border: solid 2px #e2e2e2;
+    border-radius: 3px;
+    position: absolute;
+    box-sizing: border-box;
+    width: 200px;
+  }
+  
+  .dropdowncomponent ul li.list-item {
+    padding: 0px;
+  }
+  .dropdowncomponent ul li.list-item:hover , .dropdowncomponent ul li label:hover {
+    background-color: #f7f7f7;
+    cursor: pointer;
+  }
+  .active {
+    background-color: #f7f7f7;
+  }
+  .dropdowncomponent ul li label {
+    display: block;
+    padding: 5px;
+  }
+  .dropdowncomponent li.select-all {
+    border-bottom: solid 1px #edebeb;
+  }
+  .checkmark:after {
+    left: 10px;
+    top: 6px;
+    width: 7px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  .dropdowncomponent span.checkbox {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border: solid #e2e2e2 2px;
+    border-radius: 4px;
+    margin-right: 5px;
+    margin-bottom: -1px;
+    box-sizing: border-box;
+  }
